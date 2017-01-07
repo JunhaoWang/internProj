@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/junhao/Desktop/internProj/dstruct/dec.cpp
+ll.h
+/Users/junhao/Desktop/internProj/dstruct/ll.h
+iostream
+-
+
+/Users/junhao/Desktop/internProj/dstruct/ll.h
+iostream
+-
+assert.h
+-
+

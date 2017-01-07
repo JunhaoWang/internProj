@@ -32,12 +32,24 @@ public:
         root = new Node<T> (val);
         finish = root;
     }
+    List(): root(nullptr),finish(nullptr),size(0) {};
     Node<T>* getRoot(){
         return root;
     }
     Node<T>* getEnd(){
         return finish;
     }
+    
+    void clear(){
+        for (auto i = root; i != finish;){
+            auto holder = i;
+            i = i->next;
+            delete holder;
+        }
+        size = 0;
+        root = finish = nullptr;
+    }
+
     int getSize(){
         return size;
     }
@@ -109,27 +121,37 @@ public:
     }
 
     void pop_front(){
-        if (size){
+            assert(size>0);
+            if (size > 1){
+                Node<T>* holder = root;
+                root = root->next;
+                root->prev = nullptr;
+                delete holder;
+            }
+            else {
+                delete root;
+                finish = root = nullptr;
+            }
             size-=1;
-            Node<T>* holder = root;
-            root = root->next;
-            root->prev = nullptr;
-            delete holder;
-        }
     }
 
     void pop_back(){
-         if (size){
-             size-=1;
-             Node<T>* holder = finish;
-             finish = finish->prev;
-             finish->next = nullptr;
-             delete holder;
-        }
+             assert(size>0);
+            if (size > 1){
+                 Node<T>* holder = finish;
+                 finish = finish->prev;
+                 finish->next = nullptr;
+                 delete holder;
+            }
+            else {
+                delete finish;
+                finish = root = nullptr;
+            }
+            size-=1;
     }
 
     void deleteAt(int index){
-         if (index < 0 || index > size-1){
+        if (index < 0 || index > size-1){
             std::cerr << "Index out of bound" <<'\n';
         }
         else {
@@ -174,9 +196,4 @@ public:
 	}
 };
 
-int main(){
-	List<int> l (2);
-	l.push_back(3);
-	l[1] = 50;
-	std::cout << l[1] << '\n';
-}
+
