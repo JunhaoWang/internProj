@@ -70,13 +70,4 @@ class Queue: public Deck<T> {
         }
 };
 
-int main(){
-    Queue<int> d;
-    d.push(3);
-    d.push(5);
-    d.clear();
-    d.pop();
-    std::cout << d.top() << '\n';
 
-    return 0;
-}
