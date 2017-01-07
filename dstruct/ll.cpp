@@ -1,19 +1,23 @@
 #include <iostream>
+#include <assert.h>
 
 template <typename T> class List;
 
 template <typename T>
 class Node {
 private:
-    T val; 
+    mutable T val; 
     Node* next;
     Node* prev;
     friend class List<T>;
 public:
     Node(T val): val(val), next(nullptr), prev(nullptr) {}
-    T getVal(){
+    T & getVal(){
         return val; 
     }
+	void changeVal(T valin){
+		val = valin;
+	}
 };
 
 
@@ -21,18 +25,18 @@ template <typename T>
 class List {
 private:
     Node<T>* root;
-    Node<T>* end;
+    Node<T>* finish;
     int size;
 public:
     List(T val):size(1){
         root = new Node<T> (val);
-        end = root;
+        finish = root;
     }
     Node<T>* getRoot(){
         return root;
     }
     Node<T>* getEnd(){
-        return end;
+        return finish;
     }
     int getSize(){
         return size;
@@ -40,14 +44,14 @@ public:
 
     void push_back(T val){
         size+=1;
-        if (end){
-            end->next = new Node<T> (val);
-            end->next->prev = end;    
-            end = end->next;
+        if (finish){
+            finish->next = new Node<T> (val);
+            finish->next->prev = finish;    
+            finish = finish->next;
         }
         else{
             root = new Node<T> (val);
-            end = root;
+            finish = root;
         }
     }
      void push_front(T val){
@@ -59,7 +63,7 @@ public:
         }
         else{
             root = new Node<T> (val);
-            end = root;
+            finish = root;
         }
     }
     void insert(T val, int index){
@@ -88,7 +92,7 @@ public:
                 size+=1;
             }
             else{
-                Node<T>* holder = end;
+                Node<T>* holder = finish;
                 while (size-1-index){
                     holder = holder->prev;
                     index+=1;
@@ -117,9 +121,9 @@ public:
     void pop_back(){
          if (size){
              size-=1;
-             Node<T>* holder = end;
-             end = end->prev;
-             end->next = nullptr;
+             Node<T>* holder = finish;
+             finish = finish->prev;
+             finish->next = nullptr;
              delete holder;
         }
     }
@@ -147,7 +151,7 @@ public:
                 size-=1;
             }
             else{
-                Node<T>* holder = end;
+                Node<T>* holder = finish;
                 while (size-1-index){
                     holder = holder->prev;
                     index+=1;
@@ -158,25 +162,21 @@ public:
                 size+=1;
             }
         }
-
     }
 
+	T & operator[](int index){
+		assert(index >= 0 && index < size);
+		Node<T>* holder = root;
+		for (;index > 0; --index){
+			holder = holder->next;		
+		}
+		return holder->getVal();
+	}
 };
 
-int main() {
-    List<int> l (2); 
-    l.push_back(3); 
-    l.push_back(4); 
-    l.push_back(5);
-    l.push_front(1);
-    l.insert(40,0);
-    l.insert(50,0);
-    l.insert(60,0);
-    l.insert(400,7);
-    //l.pop_back();
-    //l.deleteAt(l.getSize()-1);
-    std::cout << l.getEnd()->getVal() << '\n';
-    return 0;
-
-
+int main(){
+	List<int> l (2);
+	l.push_back(3);
+	l[1] = 50;
+	std::cout << l[1] << '\n';
 }
